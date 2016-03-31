@@ -17,7 +17,7 @@ class Song
 
         if station == 'jwave'
             return getJwave(response)
-        else if station == 'tfm'
+        elsif station == 'tfm'
             return getTfm(response)
         else station == 'interfm'
             return getInterfm(response)
