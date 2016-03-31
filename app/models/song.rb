@@ -1,9 +1,12 @@
 class Song
     # HTTParty
     include HTTParty
+    # Nokogiri
+    include Nokogiri
     $urls = {
         'jwave'=> 'http://www.j-wave.co.jp/top/xml/now_on_air_song.xml',
         'tfm'=> 'http://www.tfm.co.jp/top/xml/noamusic.xml',
+        'interfm'=>'http://www.interfm.co.jp/',
     }
 
     def getSong(station)
@@ -14,8 +17,10 @@ class Song
 
         if station == 'jwave'
             return getJwave(response)
-        else station == 'tfm'
+        else if station == 'tfm'
             return getTfm(response)
+        else station == 'interfm'
+            return getInterfm(response)
         end
     end
 
@@ -34,6 +39,16 @@ class Song
     private
     def getTfm(response)
         txt = response["item"]
+        return {
+            "title"=> txt['music_name']["__content__"],
+            "artist"=>txt['artist_name'],
+            "time"=>txt['onair_time']
+        }
+    end
+
+    private
+    def getInterfm(response)
+        txt = response["html"][""]
         return {
             "title"=> txt['music_name']["__content__"],
             "artist"=>txt['artist_name'],
