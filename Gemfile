@@ -32,10 +32,17 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 # gem 'unicorn'
 
 # Use Capistrano for deployment
-# gem 'capistrano-rails', group: :development
+gem 'capistrano'
+gem 'capistrano-rails'
+gem 'capistrano-bundler'
+gem 'capistrano-passenger'
+
 
 # httparty
 gem 'httparty'
+
+# Nokogiri
+gem 'nokogiri'
 
 gem 'rails_12factor', group: :production
 

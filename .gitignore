@@ -14,6 +14,8 @@
 
 config/database.yml
 config/secrets.yml
+config/deploy.rb
+config/deploy/
 
 # Ignore all logfiles and tempfiles.
 /log/*
@@ -21,5 +23,4 @@ config/secrets.yml
 /tmp
 
 .DS_Store
-.swp
-.swo
+*.sw*
