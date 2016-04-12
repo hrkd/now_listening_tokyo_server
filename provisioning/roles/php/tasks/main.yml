@@ -1,0 +1,19 @@
+#
+# PHP
+#
+- name: install PHP
+  yum: name={{item}} enablerepo=epel,remi-php56
+  with_items:
+    - php
+    - php-mbstring
+    - php-mysql
+    - libmcrypt
+    - libmcrypt-devel
+    - php-mcrypt
+
+- name: set timezone
+  replace: >
+    dest=/etc/php.ini
+    regexp="^;date\.timezone ="
+    replace="date.timezone = Asia/Tokyo"
+

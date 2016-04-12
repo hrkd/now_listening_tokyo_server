@@ -1,0 +1,58 @@
+#
+# Passenger
+#
+
+- name: install require software
+  yum: name={{ item }} enablerepo=epel,remi
+  with_items:
+    - httpd-devel
+    - libcurl-devel
+    - ruby-devel
+    - apr-devel
+    - apr-util-devel
+
+- name: check passenger gem installation
+  sudo: yes
+  raw: /usr/local/rbenv/shims/gem list passenger | grep passenger | sed -e "s/^passenger (\(.\+\))/\1/"
+  register: passenger_installation
+
+- name: passenger gem should be installed
+  sudo: yes
+  raw: /usr/local/rbenv/shims/gem install passenger
+#  when: passenger_installation.stdout | version_compare('4.0.45', '<')
+
+- name: chmod
+  sudo: yes
+  command: chmod 777 /usr/local/rbenv/shims/
+
+- name: rbenv rehash
+  sudo: yes
+  command: /usr/local/rbenv/bin/rbenv rehash
+
+- name: find passenger root
+  sudo: yes
+  command: /usr/local/rbenv/shims/passenger-config --root
+  register: passenger_root
+
+- name: find passenger module
+  stat: path={{ passenger_root.stdout }}/buildout/apache2/mod_passenger.so
+  register: module
+
+- name: passenger-module should be installed
+  command: "/usr/local/rbenv/shims/passenger-install-apache2-module --auto --languages=ruby,nodejs"
+  when: module.stat.exists != True
+
+# prepare directory
+- name: mkdir Apache doc_root
+  file: path=/var/www/site{{ item }} owner=apache group=apache mode=0755 state=directory
+  with_items: "{{website_ports}}"
+
+- name: httpd should be configured
+  template: src=passenger.conf.j2 dest=/etc/httpd/conf.d/passenger{{item}}.conf
+  with_items: "{{website_ports}}"
+  register: passenger_conf
+
+- name: httpd server restart
+  sudo: yes
+  service: name=httpd state=restarted
+  when: passenger_conf.changed

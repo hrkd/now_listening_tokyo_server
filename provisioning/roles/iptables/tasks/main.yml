@@ -1,0 +1,17 @@
+# 明示的に指定したいのでenabledは全て0にする
+- name: repos enabled = 0
+  replace: dest=/etc/yum.repos.d/{{item}} regexp="enabled *= *1" replace="enabled=0"
+  with_items:
+    - epel.repo
+    - rpmforge.repo
+    - remi.repo
+
+- name: SELinux Disable
+  command: setenforce 0
+  ignore_errors: True
+
+- name: Edit selinux config
+  command: sed -i -e "s/^SELINUX=enforing/SELINUX=disabled/g" /etc/selinux/config
+
+- name: stop iptabes
+  service: name=iptables state=stopped enabled=no

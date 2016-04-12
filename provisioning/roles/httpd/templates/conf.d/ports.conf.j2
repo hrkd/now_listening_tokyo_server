@@ -1,0 +1,50 @@
+#
+# Use name-based virtual hosting.
+#
+Listen {{ item }}
+NameVirtualHost *:{{ item }}
+# NOTE: NameVirtualHost cannot be used without a port specifier 
+# (e.g. :80) if mod_ssl is being used, due to the nature of the
+# SSL protocol.
+
+
+# VirtualHost example:
+# Almost any Apache directive may go into a VirtualHost container.
+# The first VirtualHost section is used for requests without a known
+# server name.
+
+<VirtualHost *:{{ item }}>
+    ServerName localhost:{{ item }}
+    DocumentRoot /var/www/site{{ item }}/
+    ErrorLog logs/error_log
+    CustomLog logs/access_log common
+    <Directory "/var/www/site{{ item }}">
+
+    #
+    # Possible values for the Options directive are "None", "All",
+    # or any combination of:
+    #   Indexes Includes FollowSymLinks SymLinksifOwnerMatch ExecCGI MultiViews
+    #
+    # Note that "MultiViews" must be named *explicitly* --- "Options All"
+    # doesn't give it to you.
+    #
+    # The Options directive is both complicated and important.  Please see
+    # http://httpd.apache.org/docs/2.2/mod/core.html#options
+    # for more information.
+    #
+    #    Options Indexes FollowSymLinks
+
+    #
+    # AllowOverride controls what directives may be placed in .htaccess files.
+    # It can be "All", "None", or any combination of the keywords:
+    #   Options FileInfo AuthConfig Limit
+    #
+        AllowOverride all
+
+    #
+    # Controls who can get stuff from this server.
+    #
+        Order allow,deny
+        Allow from all
+    </Directory>
+</VirtualHost>

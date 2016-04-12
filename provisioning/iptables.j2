@@ -1,0 +1,24 @@
+*filter
+:INPUT DROP [0:0]
+:FORWARD DROP [0:0]
+:OUTPUT ACCEPT [0:0]
+-A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+-A INPUT -p icmp -j ACCEPT
+-A INPUT -i lo -j ACCEPT
+
+
+# add start
+-A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp --dport {{ ssh_port }} -j ACCEPT
+-A INPUT -m state --state NEW -m tcp -p tcp --dport 80 -j ACCEPT
+
+-A INPUT -m state --state NEW -m tcp -p tcp --dport 8080 -j ACCEPT
+-A INPUT -m state --state NEW -m tcp -p tcp --dport 8081 -j ACCEPT
+-A INPUT -m state --state NEW -m tcp -p tcp --dport 8082 -j ACCEPT
+-A INPUT -m state --state NEW -m tcp -p tcp --dport 8083 -j ACCEPT
+-A INPUT -m state --state NEW -m tcp -p tcp --dport 8084 -j ACCEPT
+-A INPUT -m state --state NEW -m tcp -p tcp --dport 8085 -j ACCEPT
+-A INPUT -m state --state NEW -m tcp -p tcp --dport 8086 -j ACCEPT
+-A INPUT -m state --state NEW -m tcp -p tcp --dport 8087 -j ACCEPT
+-A INPUT -m state --state NEW -m tcp -p tcp --dport 8088 -j ACCEPT
+-A INPUT -m state --state NEW -m tcp -p tcp --dport 8089 -j ACCEPT
+COMMIT

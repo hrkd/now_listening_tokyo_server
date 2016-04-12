@@ -1,0 +1,26 @@
+#
+#  bundler
+#
+
+- name: install nokogiri require software
+  yum: name={{ item }} enablerepo=epel,remi
+  with_items:
+    - libxml2-devel
+    - libxslt-devel
+    - libxml2
+    - libxslt
+    - patch
+
+- name: install rails require software
+  yum: name={{ item }} enablerepo=epel,remi
+  with_items:
+    - sqlite-devel
+
+- name: update gems
+  command: /usr/local/rbenv/shims/gem update --system
+
+- name: install bundler gem
+  command: /usr/local/rbenv/shims/gem install bundler --no-ri --no-rdoc
+
+- name: rbenv rehash
+  command: /usr/local/rbenv/bin/rbenv rehash

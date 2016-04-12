@@ -1,0 +1,3 @@
+- name: install packages zsh
+  yum: name=zsh update_cache=yes
+

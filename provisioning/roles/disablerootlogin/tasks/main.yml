@@ -1,0 +1,23 @@
+- name: Fobid root to access via ssh
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    state: present
+    regexp: "^PermitRootLogin without-password"
+    line: "PermitRootLogin no"
+    backrefs: yes
+    validate: "sshd -T -f %s"
+    backup: yes
+  notify:
+    - restart sshd
+- name: Fobid ssh user to login with password
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    state: present
+    regexp: "^PasswordAuthentication yes"
+    line: "PasswordAuthentication no"
+    backrefs: yes
+    validate: "sshd -T -f %s"
+    backup: yes
+  notify:
+    - restart sshd
+

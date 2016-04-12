@@ -1,0 +1,21 @@
+Listen {{ item }}
+NameVirtualHost *:{{ item }}
+
+LoadModule passenger_module {{ passenger_root.stdout }}/buildout/apache2/mod_passenger.so
+<IfModule mod_passenger.c>
+  PassengerRoot {{ passenger_root.stdout }}
+  PassengerDefaultRuby /usr/local/rbenv/shims/ruby
+  PassengerStartTimeout 120
+</IfModule>
+
+<VirtualHost *:{{ item }}>
+#   ServerName {{ ansible_hostname }}
+
+   DocumentRoot /vagrant/public
+   <Directory /vagrant/public >
+      AllowOverride all
+      Options -MultiViews
+      # Uncomment this if you're on Apache >= 2.4:
+      #Require all granted
+   </Directory>
+</VirtualHost>

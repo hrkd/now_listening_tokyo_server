@@ -1,0 +1,57 @@
+#
+# Apache
+#
+- name: install Apache
+  yum: name={{ item }}
+  with_items:
+    - httpd
+
+- name: boot Apache
+  service: name=httpd state=started enabled=yes
+
+# prepare error log dir
+#- name: mkdir errorlog dir
+#  file: path=/etc/httpd/logs/{{ item }}/error_log owner=apache group=apache mode=0777 state=touch
+#  with_items: "{{website_ports}}"
+
+# prepare directory
+- name: mkdir Apache doc_root
+  file: path=/var/www/site{{ item }} owner=apache group=apache mode=0755 state=directory
+  with_items: "{{website_ports}}"
+
+# copy index.html
+- name: add index.html
+  template: src=index.html.j2 dest=/var/www/site{{ item }}/index.html owner=apache group=apache mode=0644
+  with_items: "{{website_ports}}"
+
+# copy apache virtual host conf
+- name: Apache vhost conf
+  template: src=conf.d/ports.conf.j2 dest=/etc/httpd/conf.d/{{ item }}.conf owner=apache group=apache mode=0644
+  with_items: "{{website_ports}}"
+
+# enable service
+- name: Enable service
+  service: name=httpd state=started enabled=yes
+
+# copy apache conf
+- name: Apache conf
+  copy: src=httpd.conf dest=/etc/httpd/conf/httpd.conf owner=apache group=apache mode=0644
+  notify:
+    - restart httpd
+
+#- name: change DocumentRoot to /vagrant
+#  replace: 
+#    dest=/etc/httpd/conf/httpd.conf
+#    regexp="DocumentRoot \"/var/www/html\""
+#    replace="DocumentRoot \"/vagrant\""
+#  notify:
+#    - restart httpd
+
+#- name: enable .htaccess
+#  replace: 
+#    dest=/etc/httpd/conf/httpd.conf
+#    regexp='AllowOverride None'
+#    replace='AllowOverride All'
+#  notify:
+#    - restart httpd
+

@@ -1,0 +1,17 @@
+#
+# phpMyAdmin
+#
+- name: install phpMyAdmin
+  yum: name=phpmyadmin enablerepo=remi,epel,rpmforge
+
+- name: chenge blowfish_secret
+  copy: src=config.inc.php dest=/usr/share/phpmyadmin/config.inc.php owner=apache group=apache mode=0644
+
+- name: chenge role
+  replace: >
+    dest=/etc/httpd/conf.d/phpmyadmin.conf
+    regexp=" Deny from all"
+    replace=" #Deny from all"
+  notify:
+    - restart httpd
+
