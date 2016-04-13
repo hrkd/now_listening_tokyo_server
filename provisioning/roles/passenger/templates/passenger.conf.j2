@@ -3,6 +3,7 @@ NameVirtualHost *:{{ item }}
 
 LoadModule passenger_module {{ passenger_root.stdout }}/buildout/apache2/mod_passenger.so
 <IfModule mod_passenger.c>
+  RailsEnv development
   PassengerRoot {{ passenger_root.stdout }}
   PassengerDefaultRuby /usr/local/rbenv/shims/ruby
   PassengerStartTimeout 120
