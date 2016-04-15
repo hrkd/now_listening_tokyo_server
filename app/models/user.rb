@@ -8,11 +8,14 @@ class User < ActiveRecord::Base
   def self.from_omniauth(auth)
     # providerとuidでUserレコードを取得する
     # 存在しない場合は、ブロック内のコードを実行して作成する
-    where(auth.slice(:provider, :uid)).first_or_create do |user|
+    # where(auth.slice(:provider, :uid)).first_or_create do |user|
+    where(provider: auth.provider, uid: auth.uid).first_or_create do |user|
       # auth.provider には "twitter"、
       # auth.uidには twitterアカウントに基づいた個別のIDが入っている
       # first_or_createメソッドが自動でproviderとuidを設定してくれるので、
       # ここでは設定は必要ない
+      user.provider = auth.provider 
+      user.uid      = auth.uid
       user.username = auth.info.nickname # twitterで利用している名前が入る
       user.email = auth.info.email # twitterの場合入らない
     end
@@ -34,5 +37,9 @@ class User < ActiveRecord::Base
     end
   end
 
-
+  # providerがある場合（Twitter経由で認証した）は、
+  # passwordは要求しないようにする。
+  def password_required?
+    super && provider.blank?
+  end
 end
