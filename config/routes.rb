@@ -1,7 +1,9 @@
 Rails.application.routes.draw do
   mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
+
+  resource :authentication_token, only: [:update, :destroy]
   devise_for :users, path_names: { sign_in: "login", sign_out: "logout"},
-    controllers: { omniauth_callbacks: "omniauth_callbacks" }
+    controllers: { sessions: "sessions",omniauth_callbacks: "omniauth_callbacks" }
 
   get 'home/index'
 
