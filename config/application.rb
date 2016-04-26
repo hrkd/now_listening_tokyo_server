@@ -26,5 +26,11 @@ module NowListeningTokyoServer
     config.to_prepare do
       DeviseController.respond_to :html, :json
     end
+
+    config.action_dispatch.default_headers = {
+      'Access-Control-Allow-Credentials'=> 'true',
+      'Access-Control-Allow-Origin'     => 'http://nowlistening.tokyo',
+      'Access-Control-Request-Method'   => '*'
+    }
   end
 end
